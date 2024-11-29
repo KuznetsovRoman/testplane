@@ -81,8 +81,8 @@ export class Cache {
 
         processedBrowsers.sharedObjects = uniqSharedObjects;
 
-        await fs.outputJSON(this._sharedObjectsMapPath, sortObject(sharedObjectsMap));
-        await fs.outputJSON(this._processedBrowsersCachePath, sortObject(processedBrowsers));
+        await fs.outputJSON(this._sharedObjectsMapPath, sortObject(sharedObjectsMap), { spaces: 4 });
+        await fs.outputJSON(this._processedBrowsersCachePath, sortObject(processedBrowsers), { spaces: 4 });
     }
 
     private hasProcessedBrowser({ browserName, browserVersion }: BrowserWithVersion): boolean {
