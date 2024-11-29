@@ -30,8 +30,7 @@ jobs:
             - run: npm ci
             - run: git config --global user.email "y-infra@yandex.ru"
             - run: git config --global user.name "y-infra"
-            - run: npm run release -- --release-as ${{ github.event.inputs.versionType }}
-            - run: npm publish
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            - run: echo 'test file' > test-file
+            - run: git add test-file
+            - run: git commit test-file
             - run: git push --follow-tags
