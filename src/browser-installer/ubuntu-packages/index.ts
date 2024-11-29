@@ -27,7 +27,7 @@ export const writeUbuntuPackageDependencies = async (ubuntuMilestone: string, de
 
     const packagesToWrite = _.uniq(currentPackages.concat(deps)).sort();
 
-    await fs.outputJSON(getDependenciesArrayFilePath(ubuntuMilestone), packagesToWrite);
+    await fs.outputJSON(getDependenciesArrayFilePath(ubuntuMilestone), packagesToWrite, { spaces: 4 });
 };
 
 let installUbuntuPackageDependenciesPromise: Promise<void>;
