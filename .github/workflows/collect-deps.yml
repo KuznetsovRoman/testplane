@@ -10,6 +10,8 @@ jobs:
     collect:
         name: Collect browser dependencies
         runs-on: ${{ matrix.os }}
+        env:
+            BRANCH_NAME: resolve-ubuntu-dependencies-${{ matrix.os }}
 
         strategy:
             matrix:
@@ -31,10 +33,11 @@ jobs:
             - run: npm ci
             - run: git config --global user.email "y-infra@yandex.ru"
             - run: git config --global user.name "y-infra"
-            - run: git checkout -b resolve-ubuntu-dependencies-${{ matrix.os }}
+            - run: git checkout -b ${{ env.BRANCH_NAME }}
             - run: npm run resolve-ubuntu-dependencies
             - run: |
                   git commit src -m 'chore: update browser dependencies for ${{ matrix.os }}' && \
-                  gh pr create -B master -H resolve-ubuntu-dependencies-${{ matrix.os }} --title "Auto update browser deps for ${{ matrix.os }}" --body "Created by Github action" || echo "No changes"
+                  git push origin ${{ env.BRANCH_NAME }} && \
+                  gh pr create -B master -H ${{ env.BRANCH_NAME }} --title "Auto update browser deps for ${{ matrix.os }}" --body "Created by Github action" || echo "No changes"
               env:
                   GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
