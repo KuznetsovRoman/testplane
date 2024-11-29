@@ -1,4 +1,4 @@
-name: Collect ubuntu browser dependencies
+name: Run testplane on github actions
 on:
     push:
         branches: [master]
@@ -6,7 +6,7 @@ on:
         branches: [master]
 jobs:
     collect:
-        name: Collect browser dependencies
+        name: Testplane minimal test
         runs-on: ${{ matrix.os }}
         env:
             BRANCH_NAME: resolve-ubuntu-dependencies-${{ matrix.os }}
@@ -22,7 +22,6 @@ jobs:
                   node-version: 18
                   registry-url: https://registry.npmjs.org
             - run: sudo apt-get update
-            - run: sudo apt-get install -y fontconfig
             - run: npm ci
             - run: npm run build
-            - run: cd e2e-test && npm i && DEBUG=testplane:browser-installer npx testplane install-deps && DEBUG=testplane:browser-installer WDIO_LOG_LEVEL=error npx testplane --local
+            - run: cd e2e-test && npm i && npx testplane install-deps && npx testplane --local

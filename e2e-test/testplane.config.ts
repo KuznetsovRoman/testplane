@@ -1,3 +1,5 @@
+import fs from "fs";
+
 const mkChrome = (browserVersion: string): Record<string, unknown> => ({
     desiredCapabilities: {
         browserName: "chrome",
@@ -13,6 +15,20 @@ const mkFirefox = (browserVersion: string): Record<string, unknown> => ({
     },
 });
 
+const osVersion = fs.readFileSync("/etc/os-release", "utf8");
+
+const ubuntuMilestone = Number((/VERSION_ID="(\d\d)/.exec(osVersion) as string[])[1]);
+
+const firefoxBrowsers = ["firefox133", "firefox130"];
+
+if (ubuntuMilestone <= 22) {
+    firefoxBrowsers.push("firefox120", "firefox110", "firefox100");
+}
+
+if (ubuntuMilestone <= 20) {
+    firefoxBrowsers.push("firefox90", "firefox80", "firefox70", "firefox60");
+}
+
 export default {
     gridUrl: "local",
     baseUrl: "http://localhost",
@@ -23,7 +39,6 @@ export default {
     automationProtocol: "webdriver",
     headless: true,
     system: {
-        debug: true,
         parallelLimit: 1,
     },
     sets: {
@@ -33,17 +48,7 @@ export default {
         },
         firefox: {
             files: ["testplane-tests/**/*.testplane.(t|j)s"],
-            browsers: [
-                "firefox60",
-                "firefox70",
-                "firefox80",
-                "firefox90",
-                "firefox100",
-                "firefox110",
-                "firefox120",
-                "firefox130",
-                "firefox134",
-            ],
+            browsers: firefoxBrowsers,
         },
     },
     browsers: {
@@ -62,6 +67,6 @@ export default {
         firefox110: mkFirefox("110.0"),
         firefox120: mkFirefox("120.0"),
         firefox130: mkFirefox("130.0"),
-        firefox134: mkFirefox("134.0"),
+        firefox133: mkFirefox("133.0"),
     },
 };

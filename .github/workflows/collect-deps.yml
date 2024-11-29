@@ -15,7 +15,7 @@ jobs:
             matrix:
                 os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
         steps:
-            - name: Checkout
+            - name: Checkout repository
               uses: actions/checkout@v2
               with:
                   fetch-depth: 0
@@ -25,13 +25,20 @@ jobs:
               with:
                   node-version: 18
                   registry-url: https://registry.npmjs.org
-            - run: sudo apt-get update
-            - run: sudo apt-get install -y apt-file
-            - run: sudo apt-file update
+            - name: Prepare Ubuntu
+              run: sudo apt-get update && sudo apt-get install -y apt-file && sudo apt-file update
             - run: npm ci
-            - run: git config --global user.email "y-infra@yandex.ru"
-            - run: git config --global user.name "y-infra"
-            - run: git checkout -b ${{ env.BRANCH_NAME }}
+            - name: Config git
+              run: git config --global user.name "y-infra" && git config --global user.email "y-infra@yandex.ru"
+            - name: Fetch branches
+              run: git fetch --all
+            - name: Checkout to branch
+              run: |
+                if git ls-remote --heads origin "$BRANCH_NAME" | grep -q "$BRANCH_NAME"; then
+                    git checkout ${{ env.BRANCH_NAME }}
+                else
+                    git checkout -b ${{ env.BRANCH_NAME }}
+                fi
             - run: npm run resolve-ubuntu-dependencies
             - name: Commit changes
               run: |
