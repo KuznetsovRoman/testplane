@@ -1,0 +1,38 @@
+name: Collect ubuntu browser dependencies
+on:
+    schedule:
+        - cron: 0 0 1 * *
+    pull_request:
+        branches: [master]
+permissions:
+    pull-requests: write
+jobs:
+    collect:
+        name: Collect browser dependencies
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GH_ACCESS_TOKEN }}
+            - name: Setup Node JS
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 18
+                  registry-url: https://registry.npmjs.org
+            - run: sudo apt-get update
+            - run: sudo apt-get install -y apt-file
+            - run: sudo apt-file update
+            - run: npm ci
+            - run: git config --global user.email "y-infra@yandex.ru"
+            - run: git config --global user.name "y-infra"
+            - run: git checkout -b resolve-ubuntu-dependencies-${{ matrix.os }}
+            - run: npm run resolve-ubuntu-dependencies
+            - run: |
+                  git commit src -m 'chore: update browser dependencies for ${{ matrix.os }}' && \
+                  gh pr create -B master -H branch_to_merge || echo "No changes"
