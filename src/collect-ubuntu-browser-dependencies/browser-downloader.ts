@@ -21,6 +21,10 @@ const getRegistryBinaryPaths = (registry: Registry): string[] => {
 
 /** @returns array of binary absolute paths */
 export const downloadBrowserVersions = async (browsers: BrowserWithVersion[]): Promise<string[]> => {
+    if (!browsers.length) {
+        return [];
+    }
+
     const registryPath = getRegistryPath();
 
     const installBinaries = ({ browserName, browserVersion }: BrowserWithVersion): Promise<string | null> =>
