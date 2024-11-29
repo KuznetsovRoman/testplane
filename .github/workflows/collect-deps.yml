@@ -36,3 +36,5 @@ jobs:
             - run: |
                   git commit src -m 'chore: update browser dependencies for ${{ matrix.os }}' && \
                   gh pr create -B master -H branch_to_merge || echo "No changes"
+              env:
+                  GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
