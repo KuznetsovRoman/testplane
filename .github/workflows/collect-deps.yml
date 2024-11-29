@@ -10,12 +10,13 @@ jobs:
     collect:
         name: Collect browser dependencies
         runs-on: ${{ matrix.os }}
-
+        env:
+            BRANCH_NAME: resolve-ubuntu-dependencies-${{ matrix.os }}
         strategy:
             matrix:
                 os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
         steps:
-            - name: Checkout
+            - name: Checkout repository
               uses: actions/checkout@v2
               with:
                   fetch-depth: 0
@@ -25,14 +26,31 @@ jobs:
               with:
                   node-version: 18
                   registry-url: https://registry.npmjs.org
-            - run: sudo apt-get update
-            - run: sudo apt-get install -y apt-file
-            - run: sudo apt-file update
+            - name: Prepare Ubuntu
+              run: sudo apt-get update && sudo apt-get install -y apt-file && sudo apt-file update
             - run: npm ci
-            - run: git config --global user.email "y-infra@yandex.ru"
-            - run: git config --global user.name "y-infra"
-            - run: git checkout -b resolve-ubuntu-dependencies-${{ matrix.os }}
+            - name: Config git
+              run: git config --global user.name "y-infra" && git config --global user.email "y-infra@yandex.ru"
+            - name: Fetch branches
+              run: git fetch --all
+            - name: Checkout to branch
+              run: |
+                  if git ls-remote --heads origin "$BRANCH_NAME" | grep -q "$BRANCH_NAME"; then
+                      git checkout ${{ env.BRANCH_NAME }}
+                  else
+                      git checkout -b ${{ env.BRANCH_NAME }}
+                  fi
             - run: npm run resolve-ubuntu-dependencies
-            - run: |
-                  git commit src -m 'chore: update browser dependencies for ${{ matrix.os }}' && \
-                  gh pr create -B master -H branch_to_merge || echo "No changes"
+            - run: git add src
+            - name: Commit changes
+              run: |
+                  if git diff-index --quiet HEAD src; then
+                      echo 'No changes'
+                  else
+                      echo 'Committing changes'
+                      git commit src -m 'chore: update local browser dependencies for ${{ matrix.os }}'
+                      git push origin ${{ env.BRANCH_NAME }}
+                      gh pr create -B master -H ${{ env.BRANCH_NAME }} --title "Auto update local browser deps for ${{ matrix.os }}" --body "Created by Github action"
+                  fi
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
