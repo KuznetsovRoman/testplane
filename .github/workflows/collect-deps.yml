@@ -35,6 +35,6 @@ jobs:
             - run: npm run resolve-ubuntu-dependencies
             - run: |
                   git commit src -m 'chore: update browser dependencies for ${{ matrix.os }}' && \
-                  gh pr create -B master -H branch_to_merge || echo "No changes"
+                  gh pr create -B master -H resolve-ubuntu-dependencies-${{ matrix.os }} --title 'Auto update browser deps for ${{matrix.os}}' --body 'Created by Github action' || echo "No changes"
               env:
-                  GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
