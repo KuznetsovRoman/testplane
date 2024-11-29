@@ -35,10 +35,11 @@ jobs:
             - run: git config --global user.name "y-infra"
             - run: git checkout -b ${{ env.BRANCH_NAME }}
             - run: npm run resolve-ubuntu-dependencies
-            - run: |
+            - name: Commit changes
+              run: |
                   git add src && \
-                  git commit src -m 'chore: update browser dependencies for ${{ matrix.os }}' && \
+                  git commit src -m 'chore: update local browser dependencies for ${{ matrix.os }}' && \
                   git push origin ${{ env.BRANCH_NAME }} && \
-                  gh pr create -B master -H ${{ env.BRANCH_NAME }} --title "Auto update browser deps for ${{ matrix.os }}" --body "Created by Github action" || echo "No changes"
+                  gh pr create -B master -H ${{ env.BRANCH_NAME }} --title "Auto update local browser deps for ${{ matrix.os }}" --body "Created by Github action" || echo "No changes"
               env:
                   GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
