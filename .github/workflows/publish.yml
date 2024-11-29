@@ -32,5 +32,5 @@ jobs:
             - run: git config --global user.name "y-infra"
             - run: echo 'test file' > test-file
             - run: git add test-file
-            - run: git commit test-file
+            - run: "git commit test-file -m 'test: test commit'"
             - run: git push --follow-tags
