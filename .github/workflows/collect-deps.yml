@@ -2,6 +2,8 @@ name: Collect ubuntu browser dependencies
 on:
     schedule:
         - cron: 0 0 1 * *
+    pull_request:
+        branches: [master]
 permissions:
     pull-requests: write
 jobs:
