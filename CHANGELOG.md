@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [8.22.5](https://github.com/gemini-testing/testplane/compare/v8.22.4...v8.22.5) (2024-12-10)
+
+
+### Bug Fixes
+
+* error when trying to disable animation ([ee931e2](https://github.com/gemini-testing/testplane/commit/ee931e2e6d849f8ca66add3f0d91e891e9be0ec4))
+
+### [8.22.4](https://github.com/gemini-testing/testplane/compare/v8.22.3...v8.22.4) (2024-12-03)
+
+
+### Bug Fixes
+
+* ability to specify "mochaOpts.ui" as function ([58c1811](https://github.com/gemini-testing/testplane/commit/58c1811e8b4703bb4e6f9ed78e296fb73776efec))
+
+### [8.22.3](https://github.com/gemini-testing/testplane/compare/v8.22.2...v8.22.3) (2024-12-02)
+
+
+### Bug Fixes
+
+* correctly specify "system" field for "ConfigInput" type ([0e34741](https://github.com/gemini-testing/testplane/commit/0e34741d6cec19e09298aa8c1456f16714341a37))
+* specify "mochaOpts" type without using types from "mocha" ([cb9563b](https://github.com/gemini-testing/testplane/commit/cb9563b1071a3fd36d3d04290ba34c91a5d63b28))
+
 ### [8.22.2](https://github.com/gemini-testing/testplane/compare/v8.22.1...v8.22.2) (2024-11-27)
 
 
