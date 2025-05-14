@@ -337,6 +337,13 @@ function transformExpectArg(arg: any): unknown {
     return arg;
 }
 
+/**
+ * Returns a WebdriverIO browser or element instance based on the provided arguments.
+ *
+ * If an element is specified, retrieves the corresponding element instance from the session; otherwise, returns the browser session itself. Ensures the element instance has its selector property set if missing.
+ *
+ * @returns The browser session or the located element instance.
+ */
 async function getWdioInstance(
     session: WebdriverIO.Browser,
     element?: WebdriverIO.Element,
@@ -350,6 +357,12 @@ async function getWdioInstance(
     return wdioInstance;
 }
 
+/**
+ * Determines if the provided context is a WebdriverIO element.
+ *
+ * @param ctx - The context to check, which may be a browser or an element.
+ * @returns True if {@link ctx} is a {@link ChainablePromiseElement}; otherwise, false.
+ */
 function isWdioElement(ctx: WebdriverIO.Browser | ChainablePromiseElement): ctx is ChainablePromiseElement {
     return Boolean((ctx as ChainablePromiseElement).elementId);
 }
