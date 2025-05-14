@@ -17,6 +17,14 @@ function mockMatchers(matcherNames: string[]): Record<string, MockMatcherFn> {
     }, {} as Record<string, MockMatcherFn>);
 }
 
+/**
+ * Creates an asynchronous mock matcher function for the specified matcher name, enabling remote execution of matcher logic via socket communication.
+ *
+ * The returned function serializes its arguments, processes various context types (including WebdriverIO elements, ChainablePromiseElements, and DOM Elements), and sends a payload to the backend for matcher evaluation. The result conforms to the Jest matcher result format.
+ *
+ * @param matcherName - The name of the matcher to mock.
+ * @returns A function that, when called, sends the matcher invocation to the backend and returns the matcher result.
+ */
 function mockMatcher(matcherName: string): MockMatcherFn {
     const mockMatcherFn: MockMatcherFn = async function (context, ...args) {
         if (
